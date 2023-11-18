@@ -20,6 +20,7 @@ async fn main() -> Result<(), module::error::Error> {
         Some(process) if process == "series" => module::series_process::put_item(&client).await?,
         Some(process) if process == "scan" => module::scan_all_item::get_all_items(&client).await?,
         Some(process) if process == "delete" => module::delete_all::delete_all_items(&client).await?,
+        Some(process) if process == "fork_join" => module::fork_join::batch_write_items(&client).await?,
         _ => println!("Invalid argument. Please specify 'batch' or 'series'."),
     }
 
