@@ -31,7 +31,7 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
         let write_request = WriteRequest::builder()
             .put_request(put_request)
             .build();
-        
+
         requests.push(write_request);
 
         if requests.len() == 25 {

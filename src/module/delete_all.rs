@@ -1,6 +1,5 @@
 use aws_sdk_dynamodb::{Client};
 use aws_sdk_dynamodb::types::AttributeValue;
-// use aws_smithy_types::error::Unhandled;
 use crate::module::error::Error;
 
 pub async fn delete_all_items(client: &Client) -> Result<(), Error> {
@@ -13,7 +12,7 @@ pub async fn delete_all_items(client: &Client) -> Result<(), Error> {
                 Some(attr) => attr,
                 None => {
                     return Err(Error::unhandled("item id not found".to_string()));
-                },
+                }
             };
             let id_value = match id_attr {
                 AttributeValue::S(s) => s,
@@ -25,7 +24,7 @@ pub async fn delete_all_items(client: &Client) -> Result<(), Error> {
                 Some(attr) => attr,
                 None => {
                     return Err(Error::unhandled("item sort not found".to_string()));
-                },
+                }
             };
             let sort_value = match sort_attr {
                 AttributeValue::S(s) => s,
