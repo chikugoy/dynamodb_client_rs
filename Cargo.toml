@@ -1,0 +1,14 @@
+[package]
+name = "dynamodb-client-rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+dotenv = "0.15.0"
+maplit = "1.0"
+aws-smithy-types = "1.0.0"
+aws-config = "0.101.0"
+aws-types = "0.101.0"
+aws-sdk-dynamodb = "0.38.0"
+thiserror = "1.0.50"
