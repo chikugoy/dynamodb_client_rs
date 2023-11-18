@@ -23,7 +23,7 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
                         ("sort".to_string(), AttributeValue::S("SortKeyValue".to_string())),
                     ])))
                     .build()
-                    .map_err(|e| Error::unhandled(e.to_string()))?; // エラーを適切に処理
+                    .map_err(|e| Error::unhandled(e.to_string()))?;
 
                 let write_request = WriteRequest::builder()
                     .put_request(put_request)
@@ -37,7 +37,7 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
                 .request_items("books".to_string(), requests)
                 .send()
                 .await
-                .map_err(|e| Error::unhandled(e.to_string()))?; // エラーを適切に処理
+                .map_err(|e| Error::unhandled(e.to_string()))?;
 
             Result::<(), Error>::Ok(())
         };
@@ -45,7 +45,7 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
     }
 
     for result in join_all(tasks).await {
-        result?; // エラー伝播
+        result?;
     }
 
     let duration = start.elapsed();
