@@ -3,8 +3,11 @@ use aws_sdk_dynamodb::types::{AttributeValue, WriteRequest};
 use aws_sdk_dynamodb::types::PutRequest;
 use std::collections::HashMap;
 use crate::module::error::Error;
+use std::time::Instant;
 
 pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
+    let start = Instant::now();
+
     let mut requests = Vec::new();
     for i in 0..100 {
         let put_request_result = PutRequest::builder()
@@ -44,6 +47,9 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
             requests.clear();
         }
     }
+
+    let duration = start.elapsed();
+    println!("実行時間: {:?}ms", duration.as_millis());
 
     Ok(())
 }
