@@ -22,16 +22,13 @@ impl AggregateResult {
     }
 
     pub(crate) fn add_success(&mut self, result: Result<BatchWriteItemOutput, SdkError<BatchWriteItemError, HttpResponse>>) {
-        match result {
-            Ok(output) => {
-                let unprocessed_count = output.unprocessed_items.map_or(0, |unprocessed| {
-                    unprocessed.values().map(|requests| requests.len()).sum()
-                });
+        if let Ok(output) = result {
+            let unprocessed_count = output.unprocessed_items.map_or(0, |unprocessed| {
+                unprocessed.values().map(|requests| requests.len()).sum()
+            });
 
-                let processed_count = TOTAL_REQUEST_COUNT - unprocessed_count;
-                self.success_count += processed_count;
-            }
-            Err(_) => {}
+            let processed_count = TOTAL_REQUEST_COUNT - unprocessed_count;
+            self.success_count += processed_count;
         }
     }
 
