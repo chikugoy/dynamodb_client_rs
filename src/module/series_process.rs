@@ -13,7 +13,7 @@ pub async fn put_item(client: &Client) -> Result<(), Error> {
         .expect("Failed to build PutItemInput");
 
     client.put_item()
-        .set_item(put_item_input.item().clone().cloned())
+        .set_item(put_item_input.item().cloned())
         .table_name(put_item_input.table_name.unwrap_or_default())
         .send()
         .await?;

@@ -1,7 +1,7 @@
 use aws_sdk_dynamodb::{Client};
 use aws_config::meta::region::RegionProviderChain;
 use aws_config::BehaviorVersion;
-use aws_config;
+
 use dotenv::dotenv;
 use std::env;
 

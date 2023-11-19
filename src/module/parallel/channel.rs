@@ -28,7 +28,7 @@ pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(),
                 .send()
                 .await;
 
-            let result = result.map_err(|sdk_error| Error::from(sdk_error));
+            let result = result.map_err(Error::from);
             sender.send(result).await.expect("sender send panic");
         });
     }
