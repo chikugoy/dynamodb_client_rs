@@ -10,6 +10,11 @@ cargo run batch
 実行時間: 227ms
 
 ### フォークジョイン並列
-cargo run batch
+cargo run fork_join
+100件
+実行時間: 77ms
+
+### チャンネル
+cargo run channel
 100件
 実行時間: 77ms
