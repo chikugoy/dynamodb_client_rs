@@ -25,6 +25,7 @@ async fn main() -> Result<(), module::error::Error> {
         Some(process) if process == "delete" => module::delete_all::delete_all_items(&client).await?,
         Some(process) if process == "fork_join" => module::parallel::fork_join::batch_write_items(&client).await?,
         Some(process) if process == "channel" => module::parallel::channel::batch_write_items(&client).await?,
+        Some(process) if process == "map_reduce" => module::parallel::map_reduce::batch_write_items(&client).await?,
         _ => println!("Invalid argument. Please specify 'batch' or 'series'."),
     }
 
