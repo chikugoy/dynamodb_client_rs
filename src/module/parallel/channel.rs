@@ -34,7 +34,6 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
 
     drop(sender);
 
-    // チャンネルからの結果を集約
     let mut aggregate_result = AggregateResult::new();
     while let Some(result) = receiver.recv().await {
         match result {
@@ -46,7 +45,6 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
     let duration = start.elapsed();
     println!("Execution time: {:?}ms", duration.as_millis());
 
-    // 最終的な集約結果の処理
     aggregate_result.process_final_result();
 
     Ok(())

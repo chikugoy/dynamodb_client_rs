@@ -12,7 +12,6 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
     let numbers = (0..100).collect::<Vec<_>>();
     let mut tasks = Vec::new();
 
-    // マップフェーズ: 各チャンクに対して非同期タスクを生成
     for chunk in numbers.chunks(25).map(|c| c.to_vec()) {
         let client = client.clone();
         let task = task::spawn(async move {
@@ -21,7 +20,6 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
                 requests.push(generate_request::create_write_request(i.to_string(), "SortKeyValue".to_string()));
             }
 
-            // DynamoDBへのバッチ書き込み
             client
                 .batch_write_item()
                 .request_items("books".to_string(), requests)
@@ -32,7 +30,6 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
         tasks.push(task);
     }
 
-    // リデュースフェーズ: 各タスクの結果を集約
     let aggregate_result = join_all(tasks).await.into_iter().fold(
         AggregateResult::new(),
         |mut acc, task_result| {
@@ -47,7 +44,6 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
     let duration = start.elapsed();
     println!("Execution time: {:?}ms", duration.as_millis());
 
-    // 最終的な集約結果の処理
     aggregate_result.process_final_result();
 
     Ok(())

@@ -10,7 +10,7 @@ pub fn create_write_request(id: String, sort_value: String) -> WriteRequest {
             ("sort".to_string(), AttributeValue::S(sort_value)),
         ])))
         .build()
-        .expect("Failed to build PutRequest"); // エラーハンドリング
+        .expect("Failed to build PutRequest");
 
     WriteRequest::builder()
         .put_request(put_request)
