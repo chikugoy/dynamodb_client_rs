@@ -49,7 +49,7 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
     }
 
     let duration = start.elapsed();
-    println!("実行時間: {:?}ms", duration.as_millis());
+    println!("Execution time: {:?}ms", duration.as_millis());
 
     Ok(())
 }

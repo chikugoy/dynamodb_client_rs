@@ -4,11 +4,12 @@ use std::time::Instant;
 use tokio::task;
 use crate::module::error::Error;
 use crate::module::generate_request;
+use crate::module::aggregate_result::AggregateResult;
 
 pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
     let start = Instant::now();
 
-    let (sender, mut receiver) = mpsc::channel(4); // チャンネルのサイズを設定
+    let (sender, mut receiver) = mpsc::channel::<Result<_, Error>>(4);
     let numbers = (0..100).collect::<Vec<_>>();
 
     for chunk in numbers.chunks(25).map(|c| c.to_vec()) {
@@ -20,24 +21,33 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
                 requests.push(generate_request::create_write_request(i.to_string(), "SortKeyValue".to_string()));
             }
 
-            // DynamoDBへのバッチ書き込み
             let result = client
                 .batch_write_item()
                 .request_items("books".to_string(), requests)
                 .send()
-                .await
-                .unwrap();
+                .await;
 
-            sender.send(result).await.unwrap(); // 結果を送信
+            let result = result.map_err(|sdk_error| Error::from(sdk_error));
+            sender.send(result).await.expect("sender send panic");
         });
     }
 
-    for _ in 0..4 {
-        receiver.recv().await.unwrap();
+    drop(sender);
+
+    // チャンネルからの結果を集約
+    let mut aggregate_result = AggregateResult::new();
+    while let Some(result) = receiver.recv().await {
+        match result {
+            Ok(output) => aggregate_result.add_output_success(output),
+            Err(e) => aggregate_result.add_error(e),
+        }
     }
 
     let duration = start.elapsed();
-    println!("実行時間: {:?}ms", duration.as_millis());
+    println!("Execution time: {:?}ms", duration.as_millis());
+
+    // 最終的な集約結果の処理
+    aggregate_result.process_final_result();
 
     Ok(())
 }
