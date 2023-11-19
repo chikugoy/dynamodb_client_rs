@@ -29,6 +29,7 @@ async fn main() -> Result<(), module::error::Error> {
         Some("fork_join") => module::parallel::fork_join::batch_write_items(&client, item_count).await?,
         Some("map_reduce") => module::parallel::map_reduce::batch_write_items(&client, item_count).await?,
         Some("pipeline") => module::parallel::pipeline::batch_write_items(&client, item_count).await?,
+        Some("parallel_performance") => module::parallel::performance::parallel_performance(&client, item_count).await?,
         _ => println!("Invalid argument. Please specify 'batch' or 'series'."),
     }
 

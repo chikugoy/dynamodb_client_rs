@@ -18,7 +18,7 @@ pub async fn delete_all_items(client: &Client) -> Result<(), Error> {
                 AttributeValue::S(s) => s,
                 _ => return Err(Error::unhandled("id attr error".to_string())),
             };
-            println!("Retrieved item id: {:?}", id_value);
+            // println!("Retrieved item id: {:?}", id_value);
 
             let sort_attr = match item.get("sort") {
                 Some(attr) => attr,
@@ -30,7 +30,7 @@ pub async fn delete_all_items(client: &Client) -> Result<(), Error> {
                 AttributeValue::S(s) => s,
                 _ => return Err(Error::unhandled("sort attr error".to_string())),
             };
-            println!("Retrieved item sort: {:?}", sort_value);
+            // println!("Retrieved item sort: {:?}", sort_value);
 
             client
                 .delete_item()
@@ -39,7 +39,7 @@ pub async fn delete_all_items(client: &Client) -> Result<(), Error> {
                 .key("sort", AttributeValue::S(sort_value.clone()))
                 .send()
                 .await?;
-            println!("Deleted item from table");
+            // println!("Deleted item from table");
         }
     }
 
