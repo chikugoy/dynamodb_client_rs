@@ -1,11 +1,9 @@
 use aws_sdk_dynamodb::{Client};
-use aws_sdk_dynamodb::types::{AttributeValue, WriteRequest};
-use aws_sdk_dynamodb::types::PutRequest;
-use std::collections::HashMap;
-use crate::module::error::Error;
 use tokio::sync::mpsc;
 use std::time::Instant;
 use tokio::task;
+use crate::module::error::Error;
+use crate::module::generate_request;
 
 pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
     let start = Instant::now();
@@ -19,19 +17,7 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
         task::spawn(async move {
             let mut requests = Vec::new();
             for i in &chunk {
-                let put_request = PutRequest::builder()
-                    .set_item(Some(HashMap::from([
-                        ("id".to_string(), AttributeValue::S(i.to_string())),
-                        ("sort".to_string(), AttributeValue::S("SortKeyValue".to_string())),
-                    ])))
-                    .build()
-                    .unwrap(); // エラーハンドリングが必要
-
-                let write_request = WriteRequest::builder()
-                    .put_request(put_request)
-                    .build();
-
-                requests.push(write_request);
+                requests.push(generate_request::create_write_request(i.to_string(), "SortKeyValue".to_string()));
             }
 
             // DynamoDBへのバッチ書き込み
