@@ -48,7 +48,7 @@ pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(),
 
     aggregate_result.process_final_result();
 
-    csv::write_to_csv("fork join parallel processing", item_count, execution_time).expect("fork write_to_csv panic message");
+    csv::write_to_csv("Fork join parallel processing", item_count, execution_time).expect("fork write_to_csv panic message");
 
     Ok(())
 }

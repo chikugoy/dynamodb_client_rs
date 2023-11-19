@@ -21,7 +21,7 @@ async fn main() -> Result<(), module::error::Error> {
     match process {
         Some("scan") => module::scan_all_item::get_all_items(&client).await?,
         Some("count") => module::count_all_item::count_all_items(&client).await?,
-        Some("batch") => module::batch::batch_write_items(&client).await?,
+        Some("batch") => module::batch::batch_write_items(&client, item_count).await?,
         Some("series_put") => module::series_process::put_item(&client).await?,
         Some("series_get") => module::series_process::get_item(&client).await?,
         Some("delete") => module::delete_all::delete_all_items(&client).await?,

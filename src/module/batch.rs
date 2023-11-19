@@ -4,8 +4,9 @@ use aws_sdk_dynamodb::types::PutRequest;
 use std::collections::HashMap;
 use crate::module::error::Error;
 use std::time::Instant;
+use crate::module::csv;
 
-pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
+pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(), Error> {
     let start = Instant::now();
 
     let mut requests = Vec::new();
@@ -49,7 +50,10 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
     }
 
     let duration = start.elapsed();
-    println!("Execution time: {:?}ms", duration.as_millis());
+    let execution_time = duration.as_millis();
+    println!("Execution time: {}ms", execution_time);
+
+    csv::write_to_csv("Batch sequential processing", item_count, execution_time).expect("fork write_to_csv panic message");
 
     Ok(())
 }
