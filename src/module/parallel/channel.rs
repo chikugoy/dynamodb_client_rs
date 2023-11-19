@@ -6,11 +6,11 @@ use crate::module::error::Error;
 use crate::module::generate_request;
 use crate::module::aggregate_result::AggregateResult;
 
-pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
+pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(), Error> {
     let start = Instant::now();
 
-    let (sender, mut receiver) = mpsc::channel::<Result<_, Error>>(4);
-    let numbers = (0..100).collect::<Vec<_>>();
+    let (sender, mut receiver) = mpsc::channel::<Result<_, Error>>(item_count / 25);
+    let numbers = (0..item_count).collect::<Vec<_>>();
 
     for chunk in numbers.chunks(25).map(|c| c.to_vec()) {
         let sender = sender.clone();

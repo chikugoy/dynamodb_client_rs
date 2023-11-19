@@ -18,3 +18,5 @@ Execution time: 77ms
 cargo run channel
 100 items
 Execution time: 77ms
+
+25件の1リクエストだけを並列にしているので、件数を増やしてもよさそう

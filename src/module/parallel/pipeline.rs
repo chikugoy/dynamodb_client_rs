@@ -5,10 +5,10 @@ use crate::module::error::Error;
 use crate::module::generate_request;
 use crate::module::aggregate_result::AggregateResult;
 
-pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
+pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(), Error> {
     let start = Instant::now();
 
-    let numbers = (0..100).collect::<Vec<_>>();
+    let numbers = (0..item_count).collect::<Vec<_>>();
     let chunks = numbers.chunks(25).map(|c| c.to_vec()).collect::<Vec<_>>();
 
     let tasks = chunks.into_iter().map(|chunk| {

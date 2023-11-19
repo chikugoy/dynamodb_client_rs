@@ -16,17 +16,19 @@ async fn main() -> Result<(), module::error::Error> {
     let client = Client::new(&shared_config);
 
     let args: Vec<String> = env::args().collect();
-    match args.get(1) {
-        Some(process) if process == "scan" => module::scan_all_item::get_all_items(&client).await?,
-        Some(process) if process == "count" => module::count_all_item::count_all_items(&client).await?,
-        Some(process) if process == "batch" => module::batch::batch_write_items(&client).await?,
-        Some(process) if process == "series_put" => module::series_process::put_item(&client).await?,
-        Some(process) if process == "series_get" => module::series_process::get_item(&client).await?,
-        Some(process) if process == "delete" => module::delete_all::delete_all_items(&client).await?,
-        Some(process) if process == "fork_join" => module::parallel::fork_join::batch_write_items(&client).await?,
-        Some(process) if process == "channel" => module::parallel::channel::batch_write_items(&client).await?,
-        Some(process) if process == "map_reduce" => module::parallel::map_reduce::batch_write_items(&client).await?,
-        Some(process) if process == "pipeline" => module::parallel::pipeline::batch_write_items(&client).await?,
+    let process = args.get(1).map(String::as_str);
+    let item_count: usize = args.get(2).and_then(|s| s.parse().ok()).unwrap_or(100);
+    match process {
+        Some("scan") => module::scan_all_item::get_all_items(&client).await?,
+        Some("count") => module::count_all_item::count_all_items(&client).await?,
+        Some("batch") => module::batch::batch_write_items(&client).await?,
+        Some("series_put") => module::series_process::put_item(&client).await?,
+        Some("series_get") => module::series_process::get_item(&client).await?,
+        Some("delete") => module::delete_all::delete_all_items(&client).await?,
+        Some("channel") => module::parallel::channel::batch_write_items(&client, item_count).await?,
+        Some("fork_join") => module::parallel::fork_join::batch_write_items(&client, item_count).await?,
+        Some("map_reduce") => module::parallel::map_reduce::batch_write_items(&client, item_count).await?,
+        Some("pipeline") => module::parallel::pipeline::batch_write_items(&client, item_count).await?,
         _ => println!("Invalid argument. Please specify 'batch' or 'series'."),
     }
 
