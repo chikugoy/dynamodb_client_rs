@@ -26,16 +26,14 @@ pub async fn batch_write_items(client: &Client) -> Result<(), Error> {
                 .request_items("books".to_string(), requests)
                 .send()
                 .await
-                .unwrap(); // エラーハンドリングが必要
+                .unwrap();
 
             sender.send(result).await.unwrap(); // 結果を送信
         });
     }
 
-    // 結果の集約
-    for _ in 0..4 { // 4回のチャンクに対応
-        let result = receiver.recv().await.unwrap(); // 結果の受信
-        // 結果の処理...
+    for _ in 0..4 {
+        receiver.recv().await.unwrap();
     }
 
     let duration = start.elapsed();
