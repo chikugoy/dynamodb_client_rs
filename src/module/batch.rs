@@ -10,7 +10,7 @@ pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(),
     let start = Instant::now();
 
     let mut requests = Vec::new();
-    for i in 0..100 {
+    for i in 0..item_count {
         let put_request_result = PutRequest::builder()
             .set_item(Some(HashMap::from(
                 [
