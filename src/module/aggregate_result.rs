@@ -51,6 +51,11 @@ impl AggregateResult {
         self.error_messages.push(error_message);
     }
 
+    pub(crate) fn add_sdk_error(&mut self, error: SdkError<BatchWriteItemError, Response>) {
+        let error_message = error.to_string();
+        self.error_messages.push(error_message);
+    }
+
     pub(crate) fn process_final_result(&self) {
         println!("Number of successful items: {}", self.success_count);
 

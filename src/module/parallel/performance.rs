@@ -31,6 +31,10 @@ pub async fn parallel_performance(client: &Client, item_count: usize) -> Result<
         module::delete_all::delete_all_items(client).await?;
         module::parallel::pipeline::batch_write_items(client, item_count).await?;
     }
+    for _ in 0..count {
+        module::delete_all::delete_all_items(client).await?;
+        module::parallel::parallel_loop::batch_write_items(client, item_count).await?;
+    }
 
     Ok(())
 }
