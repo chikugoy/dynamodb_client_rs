@@ -1,4 +1,4 @@
-// マップリデュース（MapReduce）
+// MapReduce
 
 use aws_sdk_dynamodb::{Client};
 use tokio::task;

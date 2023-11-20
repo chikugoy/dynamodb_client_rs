@@ -1,4 +1,4 @@
-// チャンネル（Channels）
+// Channels
 
 use aws_sdk_dynamodb::{Client};
 use tokio::sync::mpsc;

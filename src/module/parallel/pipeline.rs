@@ -1,4 +1,4 @@
-// パイプライン処理（Pipeline Processing）
+// Pipeline Processing
 
 use aws_sdk_dynamodb::{Client};
 use tokio::task;

@@ -1,4 +1,4 @@
-// 並列ループ（Parallel Loops）
+// Parallel Loops
 
 use aws_sdk_dynamodb::{Client};
 use rayon::prelude::*;

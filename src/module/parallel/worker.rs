@@ -1,4 +1,4 @@
-// ワーカー/マスターパターン（Worker/Master Pattern）
+// Worker/Master Pattern
 
 use aws_sdk_dynamodb::{Client};
 use tokio::{sync::mpsc, task};
