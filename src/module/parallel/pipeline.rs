@@ -1,3 +1,5 @@
+// パイプライン処理（Pipeline Processing）
+
 use aws_sdk_dynamodb::{Client};
 use tokio::task;
 use std::time::Instant;

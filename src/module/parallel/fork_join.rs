@@ -1,3 +1,5 @@
+// フォークジョイン（Fork-Join）
+
 use aws_sdk_dynamodb::{Client};
 use tokio::task;
 use std::time::Instant;

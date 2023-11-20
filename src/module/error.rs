@@ -6,6 +6,7 @@
  */
 
 use std::error::Error as StdError;
+use tokio::task::JoinError;
 
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
@@ -31,5 +32,11 @@ impl<T> From<aws_sdk_dynamodb::error::SdkError<T>> for Error
 {
     fn from(source: aws_sdk_dynamodb::error::SdkError<T>) -> Self {
         Error::unhandled(source)
+    }
+}
+
+impl From<JoinError> for Error {
+    fn from(err: JoinError) -> Self {
+        Error::unhandled(err)
     }
 }

@@ -1,3 +1,5 @@
+// チャンネル（Channels）
+
 use aws_sdk_dynamodb::{Client};
 use tokio::sync::mpsc;
 use std::time::Instant;

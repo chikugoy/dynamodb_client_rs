@@ -1,3 +1,5 @@
+// 並列ループ（Parallel Loops）
+
 use aws_sdk_dynamodb::{Client};
 use rayon::prelude::*;
 use std::time::Instant;
