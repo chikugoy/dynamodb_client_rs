@@ -23,21 +23,32 @@ async fn worker(client: Client, mut receiver: Receiver<Vec<usize>>) -> Result<Ag
             .await;
 
         match result {
-            Ok(res) => aggregate_result.add_output_success(res),
-            Err(e) => aggregate_result.add_sdk_error(e),
+            Ok(res) => {
+                // println!("Batch write successful: {:?}", res);
+                aggregate_result.add_output_success(res)
+            },
+            Err(e) => {
+                // println!("Batch write encountered an error: {:?}", e);
+                aggregate_result.add_sdk_error(e)
+            },
         };
     }
 
+    println!("Worker finished");
     Ok(aggregate_result)
 }
 
 pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(), Error> {
     let start = Instant::now();
-    let (tx, rx) = mpsc::channel(32);
+    let (tx, rx) = mpsc::channel(32000);
 
     for chunk in (0..item_count).collect::<Vec<_>>().chunks(25) {
         let chunk = chunk.to_vec();
-        tx.send(chunk).await.unwrap();
+        // tx.send(chunk).await.unwrap();
+        if let Err(e) = tx.send(chunk).await {
+            println!("Error sending chunk: {:?}", e);
+            break;
+        }
     }
 
     drop(tx);
