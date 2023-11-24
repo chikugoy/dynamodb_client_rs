@@ -1,7 +1,9 @@
+use std::time::Instant;
 use aws_sdk_dynamodb::{Client, types::AttributeValue};
 use crate::module::error::Error;
 
 pub async fn delete_all_items(client: &Client) -> Result<(), Error> {
+    let start = Instant::now();
     let table_name = "books";
     let mut exclusive_start_key = None;
 
@@ -52,5 +54,10 @@ pub async fn delete_all_items(client: &Client) -> Result<(), Error> {
     }
 
     println!("All items deleted successfully.");
+
+    let duration = start.elapsed();
+    let execution_time = duration.as_millis();
+    println!("Execution time: {}ms", execution_time);
+
     Ok(())
 }
