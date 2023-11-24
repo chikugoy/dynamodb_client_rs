@@ -39,7 +39,7 @@ impl AggregateResult {
             let unprocessed_items = output.unprocessed_items.unwrap_or_default();
 
             for (table_name, requests) in &unprocessed_items {
-                self.unprocessed_items.entry(table_name.clone()).or_insert_with(Vec::new).extend(requests.clone());
+                self.unprocessed_items.entry(table_name.clone()).or_default().extend(requests.clone());
             }
 
             let unprocessed_count: usize = unprocessed_items.values().map(|requests| requests.len()).sum();
