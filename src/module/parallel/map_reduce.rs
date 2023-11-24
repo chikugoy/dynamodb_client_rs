@@ -32,7 +32,7 @@ pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(),
         tasks.push(task);
     }
 
-    let mut aggregate_result = AggregateResult::new(); // 結果集約用の構造体の初期化
+    let mut aggregate_result = AggregateResult::new();
     for task in tasks {
         match task.await {
             Ok(result) => {

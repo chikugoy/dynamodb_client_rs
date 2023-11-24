@@ -39,20 +39,19 @@ async fn worker(client: Client, mut receiver: Receiver<Vec<usize>>) -> Result<Ag
 pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(), Error> {
     let start = Instant::now();
 
-    let worker_count = item_count / 25; // または必要なワーカー数に基づいて調整
-    let chunk_size = item_count / worker_count; // 各ワーカーに割り当てるデータの量
+    let worker_count = item_count / 25;
+    let chunk_size = item_count / worker_count;
     let mut handles = Vec::new();
 
     for i in 0..worker_count {
-        let (tx, rx) = mpsc::channel(32); // 各ワーカー用のチャネル
+        let (tx, rx) = mpsc::channel(32);
         let worker_client = client.clone();
 
-        // 各ワーカーにデータを分配
         let start_index = i * chunk_size;
         let end_index = start_index + chunk_size;
         for chunk in (start_index..end_index).collect::<Vec<_>>().chunks(25) {
             let chunk = chunk.to_vec();
-            tx.send(chunk).await.unwrap(); // エラーハンドリングを適宜追加
+            tx.send(chunk).await.unwrap();
         }
 
         let handle = task::spawn(worker(worker_client, rx));
@@ -62,11 +61,11 @@ pub async fn batch_write_items(client: &Client, item_count: usize) -> Result<(),
     let results = join_all(handles).await;
     for result in results {
         match result {
-            Ok(aggregate_result) => {
-                // aggregate_result.process_final_result(); ここで必要な処理を実行
+            Ok(_aggregate_result) => {
+                // Success process
             }
-            Err(e) => {
-                // エラー処理
+            Err(_e) => {
+                // Error process
             }
         }
     }
