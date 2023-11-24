@@ -12,6 +12,7 @@ pub type HttpResponse = Response;
 
 const TOTAL_REQUEST_COUNT: usize = 25;
 
+#[allow(dead_code)]
 pub(crate) struct AggregateResult {
     success_count: usize,
     unprocessed_count: usize,
@@ -74,6 +75,7 @@ impl AggregateResult {
         self.error_messages.push(error_message);
     }
 
+    #[allow(dead_code)]
     pub async fn retry_unprocessed_items(&mut self, client: &Client, table_name: &str) {
         if self.unprocessed_items.is_empty() {
             return;
