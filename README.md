@@ -53,6 +53,19 @@ cargo run parallel_performance 1000
 
 Please note that you will be charged for data input and output operations performed on DynamoDB.
 
+## Performance
+
+Data submission resulted in the following results. The average time (ms) for 10 trials of 1000 data submissions, respectively.
+
+| Processing | Execution Time (ms) |
+| ---- | ---- |
+|Sequential processing | 619 |
+|Channel parallel processing | 71 |
+| Fork join parallel processing | 38|
+| Map reduce parallel processing | 43　|
+|Parallel loop processing | 146 |
+| Worker/Master Pattern | 46|
+
 ## Contributing
 
 Contributions to the project are welcome. Please follow the standard fork, branch, and pull request workflow.
