@@ -1,3 +1,5 @@
+use std::time::Instant;
+use tokio::time::{sleep, Duration};
 use aws_sdk_dynamodb::{Client};
 use aws_config::meta::region::RegionProviderChain;
 use aws_config::BehaviorVersion;
@@ -9,6 +11,8 @@ mod module;
 
 #[tokio::main]
 async fn main() -> Result<(), module::error::Error> {
+    let start = Instant::now();
+
     dotenv().ok();
 
     let region_provider = RegionProviderChain::default_provider();
@@ -27,6 +31,12 @@ async fn main() -> Result<(), module::error::Error> {
         Some("delete") => module::delete_all::delete_all_items(&client).await?,
         Some("channel") => module::parallel::channel::batch_write_items(&client, item_count).await?,
         Some("fork_join") => module::parallel::fork_join::batch_write_items(&client, item_count).await?,
+        Some("fork_join_loop") => {
+            for _ in 0..100 {
+                sleep(Duration::from_millis(300)).await;
+                module::parallel::fork_join::batch_write_items(&client, item_count).await?
+            }
+        },
         Some("map_reduce") => module::parallel::map_reduce::batch_write_items(&client, item_count).await?,
         Some("pipeline") => module::parallel::pipeline::batch_write_items(&client, item_count).await?,
         Some("parallel_loop") => module::parallel::r#loop::batch_write_items(&client, item_count).await?,
@@ -34,6 +44,10 @@ async fn main() -> Result<(), module::error::Error> {
         Some("parallel_performance") => module::parallel::performance::parallel_performance(&client, item_count).await?,
         _ => println!("Invalid argument. Please specify 'batch' or 'series'."),
     }
+
+    let duration = start.elapsed();
+    let execution_time = duration.as_millis();
+    println!("All Execution time: {}ms", execution_time);
 
     Ok(())
 }
